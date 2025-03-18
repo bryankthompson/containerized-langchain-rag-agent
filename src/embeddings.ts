@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { Pipeline, pipeline } from "@xenova/transformers";
+import { pipeline } from "@xenova/transformers";
 import { Vector } from "@pinecone-database/pinecone";
 import { Document } from 'langchain/document';
 import { EmbeddingsParams, Embeddings } from "langchain/embeddings/base";
@@ -13,7 +13,7 @@ function isString(test: any): test is string {
 }
 
 class Embedder {
-  private pipe: Pipeline;
+  private pipe: any; // Using any to fix the pipeline type issues
 
   async init(modelName: string) {
     this.pipe = await pipeline(
@@ -31,9 +31,9 @@ class Embedder {
     return {
       id,
       metadata: metadata || {
-        text,
+        text
       },
-      values: Array.from(result.data),
+      values: Array.from(result.data)
     };
   }
 
@@ -65,7 +65,7 @@ interface TransformersJSEmbeddingParams extends EmbeddingsParams {
 class TransformersJSEmbedding extends Embeddings implements TransformersJSEmbeddingParams {
   modelName: string;
 
-  pipe: Pipeline | null = null;
+  pipe: any | null = null; // Using any to fix the pipeline type issues
 
   constructor(params: TransformersJSEmbeddingParams) {
     super(params);

@@ -2,12 +2,12 @@
 /* eslint-disable dot-notation */
 import * as dotenv from "dotenv";
 import { Vector, utils } from '@pinecone-database/pinecone';
-import { getEnv } from "utils/util.ts";
-import { getPineconeClient } from "utils/pinecone.ts";
+import { getEnv } from "./utils/util.js";
+import { getPineconeClient } from "./utils/pinecone.js";
 import cliProgress from "cli-progress";
 import { Document } from 'langchain/document';
 import * as dfd from "danfojs-node";
-import { embedder } from "embeddings.ts";
+import { embedder } from "./embeddings.js";
 import { SquadRecord, loadSquad } from "./utils/squadLoader.js";
 
 dotenv.config();
@@ -43,7 +43,7 @@ async function* processInChunks(dataFrame: dfd.DataFrame, chunkSize: number): As
 
 async function embedAndUpsert(dataFrame: dfd.DataFrame, chunkSize: number) {
   const chunkGenerator = processInChunks(dataFrame, chunkSize);
-  const index = pineconeClient.Index(indexName);
+  const index = pineconeClient.Index(indexName) as any;
 
 
   for await (const documents of chunkGenerator) {

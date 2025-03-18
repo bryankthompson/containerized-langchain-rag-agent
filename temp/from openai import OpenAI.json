@@ -1,0 +1,108 @@
+from openai import OpenAI
+client = OpenAI()
+
+response = client.chat.completions.create(
+  model="gpt-4o-mini",
+  messages=[],
+  response_format={
+    "type": "text"
+  },
+  tools=[
+    {
+      "type": "function",
+      "function": {
+        "name": "parseConversation",
+        "strict": False,
+        "parameters": {
+          "type": "object",
+          "required": [
+            "raw_text"
+          ],
+          "properties": {
+            "raw_text": {
+              "type": "string",
+              "description": "Raw Teams conversation text"
+            },
+            "expected_participants": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Optional list of known participants"
+            }
+          }
+        },
+        "description": "Parse raw Teams conversations into structured JSON"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "findUnresolvedQuestions",
+        "strict": False,
+        "parameters": {
+          "type": "object",
+          "required": [
+            "conversation_json"
+          ],
+          "properties": {
+            "conversation_json": {
+              "type": "object",
+              "description": "Parsed conversation JSON"
+            }
+          }
+        },
+        "description": "Extract questions from the conversation that appear to be unanswered"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "participationAnalysis",
+        "strict": False,
+        "parameters": {
+          "type": "object",
+          "required": [
+            "conversation_json"
+          ],
+          "properties": {
+            "conversation_json": {
+              "type": "object",
+              "description": "Parsed conversation JSON"
+            }
+          }
+        },
+        "description": "Analyze participation patterns by user (message count, length, topics)"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "matchTemplateToDatabase",
+        "strict": False,
+        "parameters": {
+          "type": "object",
+          "required": [
+            "conversation_json"
+          ],
+          "properties": {
+            "db_schema": {
+              "type": "object",
+              "description": "Database schema for reference"
+            },
+            "conversation_json": {
+              "type": "object",
+              "description": "Parsed conversation JSON"
+            }
+          }
+        },
+        "description": "Identify database tables, fields, and operations mentioned in conversation"
+      }
+    }
+  ],
+  temperature=1,
+  max_completion_tokens=2048,
+  top_p=1,
+  frequency_penalty=0,
+  presence_penalty=0
+)

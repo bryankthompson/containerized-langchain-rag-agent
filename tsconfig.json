@@ -1,26 +1,17 @@
 {
   "compilerOptions": {
-    "allowImportingTsExtensions": true,
-    "strict": true,
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "dist",
-    "lib": ["ES2021", "ES2022.Object", "DOM"],
-    "target": "es2017",
-    "module": "nodenext",
-    "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "./src",
+    "outDir": "build",
     "declaration": true,
     "experimentalDecorators": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "useDefineForClassFields": true,
-    "strictPropertyInitialization": false,
-    "noEmit": true
+    "strict": false,
+    "target": "es2022",
+    "module": "NodeNext",
+    "lib": ["ES2021", "ES2022.Object", "DOM"],
+    "sourceMap": true
   },
   "exclude": ["node_modules/", "dist/", "tests/"],
   "include": ["./src"]

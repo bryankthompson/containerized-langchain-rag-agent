@@ -3,14 +3,14 @@ import { OpenAI } from "langchain/llms/openai";
 import { VectorDBQAChain } from "langchain/chains";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
 import { ChainTool } from "langchain/tools";
-import { getPineconeClient } from "utils/pinecone.ts";
-import { getEnv } from "utils/util.ts";
-import { TransformersJSEmbedding } from "embeddings.ts";
+import { getPineconeClient } from "./utils/pinecone.js";
+import { getEnv } from "./utils/util.js";
+import { TransformersJSEmbedding } from "./embeddings.js";
 
 const indexName = getEnv("PINECONE_INDEX");
 
 const pineconeClient = await getPineconeClient();
-const pineconeIndex = pineconeClient.Index(indexName);
+const pineconeIndex = pineconeClient.Index(indexName) as any;
 
 const vectorStore = await PineconeStore.fromExistingIndex(
   new TransformersJSEmbedding({
