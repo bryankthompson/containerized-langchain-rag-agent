@@ -11,9 +11,14 @@ export class Crawl4aiClient {
   private baseUrl: string;
   
   constructor() {
-    // Get configuration from environment variables with defaults
-    const host = getEnv('CRAWL4AI_HOST') || '10.0.0.206';
-    const port = getEnv('CRAWL4AI_PORT') || '6379';
+    // No defaults. These used to fall back to a literal private-network address on the author's
+    // own LAN, which told every reader of this public repository the internal addressing of a
+    // machine they cannot reach — no use to them, and a small piece of a network map.
+    const host = getEnv('CRAWL4AI_HOST');
+    const port = getEnv('CRAWL4AI_PORT');
+    if (!host || !port) {
+      throw new Error('CRAWL4AI_HOST and CRAWL4AI_PORT must be set; see .env.example.');
+    }
     this.baseUrl = `http://${host}:${port}`;
   }
 
