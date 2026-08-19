@@ -5,6 +5,26 @@ const { Client } = pkg;
  * PostgresLogger - Utility for logging operations to PostgreSQL database.
  * Integrates with Triepod platform logging system.
  */
+
+/**
+ * Read a required connection setting from the environment.
+ *
+ * These used to be `process.env.X || '<literal>'`, and the literals were not placeholders: a real
+ * host, database, user and password for a private-network Postgres were committed here and in
+ * .env.example. A default that is a real credential is worse than no default — it works, so nobody
+ * notices the environment is unset, and it ships the secret to every reader of a public repository.
+ */
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(
+      `${name} is not set. Postgres logging needs POSTGRES_HOST, POSTGRES_DB, POSTGRES_USER and ` +
+        `POSTGRES_PASSWORD in the environment; see .env.example.`,
+    );
+  }
+  return value;
+}
+
 export class PostgresLogger {
   private client: any; // Temporary type assertion
   private connected: boolean = false;
@@ -182,11 +202,11 @@ let loggerInstance: PostgresLogger | null = null;
 export function getPostgresLogger(): PostgresLogger {
   if (!loggerInstance) {
     loggerInstance = new PostgresLogger({
-      host: process.env.POSTGRES_HOST || '10.0.0.205',
-      port: parseInt(process.env.POSTGRES_PORT || '30808'),
-      database: process.env.POSTGRES_DB || 'lodestar-ai',
-      user: process.env.POSTGRES_USER || 'lodestar-db',
-      password: process.env.POSTGRES_PASSWORD || 'nirvana1'
+      host: requireEnv('POSTGRES_HOST'),
+      port: parseInt(process.env.POSTGRES_PORT ?? '5432'),
+      database: requireEnv('POSTGRES_DB'),
+      user: requireEnv('POSTGRES_USER'),
+      password: requireEnv('POSTGRES_PASSWORD')
     });
   }
 
